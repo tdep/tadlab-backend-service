@@ -1,0 +1,1 @@
+web: java -jar target/tadlab-backend-api-1.00-SNAPSHOT.jar
