@@ -1,12 +1,28 @@
 package com.tdep.tadlab.backendservice;
 
-import com.tdep.tadlab.backendservice.data.DatabaseConnector;
-import com.tdep.tadlab.backendservice.utils.EnvironmentConstructor;
-import java.sql.Connection;
 
+import com.tdep.tadlab.backendservice.controllers.SampleApplicationController;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class Main {
+  private static Connection getConnection() throws URISyntaxException, SQLException {
+    String dbUrl = System.getenv("JDBC_DATABASE_URL");
+    return DriverManager.getConnection(dbUrl);
+  }
+
   public static void main(String[] args) throws Exception {
-    DatabaseConnector databaseConnector = new DatabaseConnector();
+
+    try{
+      SpringApplication.run(Main.class, args);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
 
   }
 }
