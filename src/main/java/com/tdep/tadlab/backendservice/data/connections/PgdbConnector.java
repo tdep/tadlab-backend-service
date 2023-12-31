@@ -2,7 +2,10 @@ package com.tdep.tadlab.backendservice.data.connections;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,5 +26,21 @@ public class PgdbConnector {
       LOG.info("Successfully connected to the database!");
     }
     return connection;
+  }
+
+  public static void closeConnection(Connection connection) throws SQLException {
+    connection.close();
+  }
+
+  public static void closeStatement(Statement statement) throws SQLException {
+    statement.close();
+  }
+
+  public static void closePreparedStatement(PreparedStatement preparedStatement) throws SQLException {
+    preparedStatement.close();
+  }
+
+  public static void closeResultSet(ResultSet resultSet) throws SQLException {
+    resultSet.close();
   }
 }

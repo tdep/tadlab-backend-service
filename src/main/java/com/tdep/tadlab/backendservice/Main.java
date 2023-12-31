@@ -5,6 +5,7 @@ import com.tdep.tadlab.backendservice.data.dao.JobDAO;
 import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.dto.Job;
 import java.sql.*;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -28,11 +29,21 @@ public class Main {
 //    System.out.println(name);
 //    connection.close();
 
+//    JobDAO jobDAO = new JobDAOImpl();
+//
+//    Job job = jobDAO.get(6);
+//
+//    System.out.println(job);
+
+    List<Job> jobs;
+
     JobDAO jobDAO = new JobDAOImpl();
 
-    Job job = jobDAO.get(6);
+    jobs = jobDAO.getAll();
 
-    System.out.println(job);
+    for (Job job : jobs) {
+        System.out.println(job);
+    }
 
     try {
       SpringApplication.run(Main.class, args);

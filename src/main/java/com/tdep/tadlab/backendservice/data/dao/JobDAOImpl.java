@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JobDAOImpl implements JobDAO{
@@ -31,12 +33,41 @@ public class JobDAOImpl implements JobDAO{
 
       job = new Job(jobId, name, start_date, end_date);
     }
+
+    PgdbConnector.closeResultSet(rs);
+    PgdbConnector.closePreparedStatement(ps);
+    PgdbConnector.closeConnection(connection);
+
     return job;
   }
 
   @Override
   public List<Job> getAll() throws SQLException {
-    return null;
+
+    Connection connection = PgdbConnector.connectDb();
+    String sql = "SELECT id, name, start_date, end_date FROM job";
+
+    List<Job> jobs = new ArrayList<>();
+
+    Statement statement = connection.createStatement();
+
+    ResultSet rs = statement.executeQuery(sql);
+
+    while(rs.next()) {
+      int jobId = rs.getInt("id");
+      String name = rs.getString("name");
+      String start_date = rs.getString("start_date");
+      String end_date = rs.getString("end_date");
+
+      Job job = new Job(jobId, name, start_date, end_date);
+
+      jobs.add(job);
+    }
+    PgdbConnector.closeResultSet(rs);
+    PgdbConnector.closeStatement(statement);
+    PgdbConnector.closeConnection(connection);
+
+    return jobs;
   }
 
   @Override
