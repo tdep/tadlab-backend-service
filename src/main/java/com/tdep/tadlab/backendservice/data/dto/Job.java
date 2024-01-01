@@ -1,12 +1,14 @@
 package com.tdep.tadlab.backendservice.data.dto;
 
+import java.sql.Date;
+
 public class Job {
   private int id;
   private String name;
-  private String start_date;
-  private String end_date;
+  private Date start_date;
+  private Date end_date;
 
-  public Job(int id, String name, String start_date, String end_date) {
+  public Job(int id, String name, Date start_date, Date end_date) {
     this.id = id;
     this.name = name;
     this.start_date = start_date;
@@ -39,19 +41,19 @@ public class Job {
     this.name = name;
   }
 
-  public String getStartDate() {
+  public Date getStartDate() {
     return start_date;
   }
 
-  public void setStart_date(String start_date) {
+  public void setStart_date(Date start_date) {
     this.start_date = start_date;
   }
 
-  public String getEnd_date() {
+  public Date getEndDate() {
     return end_date;
   }
 
-  public void setEnd_date(String end_date) {
+  public void setEnd_date(Date end_date) {
     this.end_date = end_date;
   }
 

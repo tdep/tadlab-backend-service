@@ -28,22 +28,34 @@ public class Main {
 //    String name = rs.getString(1);
 //    System.out.println(name);
 //    connection.close();
-
+// ======
 //    JobDAO jobDAO = new JobDAOImpl();
 //
 //    Job job = jobDAO.get(6);
 //
 //    System.out.println(job);
-
-    List<Job> jobs;
+// ======
+//    List<Job> jobs;
+//
+//    JobDAO jobDAO = new JobDAOImpl();
+//
+//    jobs = jobDAO.getAll();
+//
+//    for (Job job : jobs) {
+//        System.out.println(job);
+//    }
 
     JobDAO jobDAO = new JobDAOImpl();
 
-    jobs = jobDAO.getAll();
+    String str = "2023-04-04";
 
-    for (Job job : jobs) {
-        System.out.println(job);
-    }
+    Date date = Date.valueOf(str);
+
+    Job job = new Job(0, "Blorpen", date, date);
+
+    int result = jobDAO.insert(job);
+
+    System.out.println(result);
 
     try {
       SpringApplication.run(Main.class, args);
