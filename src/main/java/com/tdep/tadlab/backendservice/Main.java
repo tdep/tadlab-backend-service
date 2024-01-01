@@ -3,6 +3,7 @@ package com.tdep.tadlab.backendservice;
 import com.tdep.tadlab.backendservice.data.connections.PgdbConnector;
 import com.tdep.tadlab.backendservice.data.dao.JobDAO;
 import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
+import com.tdep.tadlab.backendservice.data.ddl.TableBuilder;
 import com.tdep.tadlab.backendservice.data.dto.Job;
 import java.sql.*;
 import java.util.List;
@@ -18,6 +19,9 @@ public class Main {
 
 
   public static void main(String[] args) throws Exception{
+
+    TableBuilder.build();
+
 //    Connection connection = PgdbConnector.connectDb();
 //
 //
@@ -57,14 +61,24 @@ public class Main {
 //
 //    System.out.println(result);
 // ======
-    JobDAO jobDAO = new JobDAOImpl();
-
-    Date date = Date.valueOf("2023-01-01");
-    Job job = new Job(9, "jorb", date, date);
-
-    jobDAO.update(job);
-
-    System.out.println(job);
+//    JobDAO jobDAO = new JobDAOImpl();
+//
+//    Date date = Date.valueOf("2023-01-01");
+//    Job job = new Job(9, "jorb", date, date);
+//
+//    jobDAO.update(job);
+//
+//    System.out.println(job);
+// ======
+//    JobDAO jobDAO = new JobDAOImpl();
+//
+//    Job job = jobDAO.get(9);
+//
+//    System.out.println(job);
+//
+//    int result = jobDAO.delete(job);
+//
+//    System.out.println(result);
 
     try {
       SpringApplication.run(Main.class, args);

@@ -14,7 +14,7 @@ import java.util.List;
 public class JobDAOImpl implements JobDAO{
 
   @Override
-  public Job get(int id) throws SQLException {
+  public Job get(int job_id) throws SQLException {
     Connection connection = PgdbConnector.connectDb();
     Job job = null;
 
@@ -22,12 +22,12 @@ public class JobDAOImpl implements JobDAO{
 
     PreparedStatement ps = connection.prepareStatement(sql);
 
-    ps.setInt(1, id);
+    ps.setInt(1, job_id);
 
     ResultSet rs = ps.executeQuery();
 
     if (rs.next()) {
-      int jobId = rs.getInt("id");
+      int jobId = rs.getInt("job_id");
       String name = rs.getString("name");
       Date start_date = Date.valueOf(rs.getString("start_date"));
       Date end_date = Date.valueOf(rs.getString("end_date"));
@@ -55,7 +55,7 @@ public class JobDAOImpl implements JobDAO{
     ResultSet rs = statement.executeQuery(sql);
 
     while(rs.next()) {
-      int jobId = rs.getInt("id");
+      int jobId = rs.getInt("job_id");
       String name = rs.getString("name");
       Date start_date = Date.valueOf(rs.getString("start_date"));
       Date end_date = Date.valueOf(rs.getString("end_date"));
@@ -108,7 +108,7 @@ public class JobDAOImpl implements JobDAO{
     ps.setString(1, job.getName());
     ps.setDate(2, job.getStartDate());
     ps.setDate(3, job.getEndDate());
-    ps. setInt(4, job.getJobId());
+    ps.setInt(4, job.getJobId());
 
     int result = ps.executeUpdate();
 
@@ -120,6 +120,19 @@ public class JobDAOImpl implements JobDAO{
 
   @Override
   public int delete(Job job) throws SQLException {
-    return 0;
+    Connection connection = PgdbConnector.connectDb();
+
+    String sql = "DELETE FROM job WHERE job_id = ?";
+
+    PreparedStatement ps = connection.prepareStatement(sql);
+
+    ps.setInt(1, job.getJobId());
+
+    int result = ps.executeUpdate();
+
+    PgdbConnector.closePreparedStatement(ps);
+    PgdbConnector.closeConnection(connection);
+
+    return result;
   }
 }
