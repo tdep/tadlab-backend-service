@@ -3,13 +3,13 @@ package com.tdep.tadlab.backendservice.data.dto;
 import java.sql.Date;
 
 public class Job {
-  private int id;
+  private int jobId;
   private String name;
   private Date start_date;
   private Date end_date;
 
-  public Job(int id, String name, Date start_date, Date end_date) {
-    this.id = id;
+  public Job(int jobId, String name, Date start_date, Date end_date) {
+    this.jobId = jobId;
     this.name = name;
     this.start_date = start_date;
     this.end_date = end_date;
@@ -18,19 +18,19 @@ public class Job {
   @Override
   public String toString() {
     return "Job{" +
-        "id=" + id +
+        "id=" + jobId +
         ", name='" + name + '\'' +
         ", start_date='" + start_date + '\'' +
         ", end_date='" + end_date + '\'' +
         '}';
   }
 
-  public int getId() {
-    return id;
+  public int getJobId() {
+    return jobId;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setJobId(int jobId) {
+    this.jobId = jobId;
   }
 
   public String getName() {

@@ -99,7 +99,23 @@ public class JobDAOImpl implements JobDAO{
 
   @Override
   public int update(Job job) throws SQLException {
-    return 0;
+    Connection connection = PgdbConnector.connectDb();
+
+    String sql = "UPDATE job set name = ?, start_date = ?, end_date = ? WHERE job_id = ?";
+
+    PreparedStatement ps = connection.prepareStatement(sql);
+
+    ps.setString(1, job.getName());
+    ps.setDate(2, job.getStartDate());
+    ps.setDate(3, job.getEndDate());
+    ps. setInt(4, job.getJobId());
+
+    int result = ps.executeUpdate();
+
+    PgdbConnector.closePreparedStatement(ps);
+    PgdbConnector.closeConnection(connection);
+
+    return result;
   }
 
   @Override

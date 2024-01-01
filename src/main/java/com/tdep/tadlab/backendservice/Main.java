@@ -44,18 +44,27 @@ public class Main {
 //    for (Job job : jobs) {
 //        System.out.println(job);
 //    }
-
+// ======
+//    JobDAO jobDAO = new JobDAOImpl();
+//
+//    String str = "2023-04-04";
+//
+//    Date date = Date.valueOf(str);
+//
+//    Job job = new Job(0, "Blorpen", date, date);
+//
+//    int result = jobDAO.insert(job);
+//
+//    System.out.println(result);
+// ======
     JobDAO jobDAO = new JobDAOImpl();
 
-    String str = "2023-04-04";
+    Date date = Date.valueOf("2023-01-01");
+    Job job = new Job(9, "jorb", date, date);
 
-    Date date = Date.valueOf(str);
+    jobDAO.update(job);
 
-    Job job = new Job(0, "Blorpen", date, date);
-
-    int result = jobDAO.insert(job);
-
-    System.out.println(result);
+    System.out.println(job);
 
     try {
       SpringApplication.run(Main.class, args);
