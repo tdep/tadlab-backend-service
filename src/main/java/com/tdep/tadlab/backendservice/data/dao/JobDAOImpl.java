@@ -44,7 +44,7 @@ public class JobDAOImpl implements JobDAO{
 
   @Override
   public List<Job> getAll() throws SQLException {
-
+// TODO: Add pagination and nextToken somehow
     Connection connection = PgdbConnector.connectDb();
     String sql = "SELECT job_id, name, start_date, end_date FROM job";
 

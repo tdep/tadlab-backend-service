@@ -5,6 +5,8 @@ import com.tdep.tadlab.backendservice.data.dao.JobDAO;
 import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.ddl.TableBuilder;
 import com.tdep.tadlab.backendservice.data.dto.Job;
+import com.tdep.tadlab.backendservice.service.JobService;
+import com.tdep.tadlab.backendservice.service.utils.Connector;
 import java.sql.*;
 import java.util.List;
 import org.slf4j.Logger;
@@ -20,7 +22,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception{
 
-    TableBuilder.build();
+//    TableBuilder.build();
 
 //    Connection connection = PgdbConnector.connectDb();
 //
@@ -79,6 +81,12 @@ public class Main {
 //    int result = jobDAO.delete(job);
 //
 //    System.out.println(result);
+    Connector connector = new Connector();
+    JobService jobService = new JobService(connector);
+
+    System.out.println(jobService.getJob(1));
+    System.out.println(jobService.getAllJobs());
+    System.out.println(jobService.addJob("Blorp","Blor", "Blo", "Bl"));
 
     try {
       SpringApplication.run(Main.class, args);

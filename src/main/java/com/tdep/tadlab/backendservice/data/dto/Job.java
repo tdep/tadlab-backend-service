@@ -57,5 +57,5 @@ public class Job {
     this.end_date = end_date;
   }
 
-
+  public boolean isEmpty() { return name.isEmpty(); }
 }
