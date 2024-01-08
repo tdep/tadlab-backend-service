@@ -35,6 +35,8 @@ public class JobDAOImpl implements JobDAO{
       String start_date = rs.getString("start_date");
       String end_date = rs.getString("end_date");
       job = new Job(jobId, name, start_date, end_date);
+    } else {
+      throw new SQLException(String.valueOf(rs.wasNull()));
     }
 
     PgdbConnector.closeResultSet(rs);

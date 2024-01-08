@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,30 +63,52 @@ public class JobService {
     return jobsList;
   }
 
-  public String addJob(int jobId, String name, String startDate, String endDate) throws SQLException{
+  public Job addJob(int jobId, String name, String startDate, String endDate) throws SQLException{
     Connection connection = connector.openConnection();
     JobDAO jobDAO = new JobDAOImpl();
     Job job;
     try {
       jobDAO.insert(job = new Job(jobId, name, startDate, endDate));
+      LOG.info(String.format("Added: %s", job));
     } catch (SQLException e) {
+      LOG.info("Unable to create new job, check that all fields are entered correctly.");
       throw  new SQLException(e.getMessage());
     }
     connector.closeConnection(connection);
-    return job.toString();
+    return job;
   }
 
-  public String updateJob(int jobId, String name, String startDate, String endDate) throws SQLException{
+  public Job updateJob(int jobId, String name, String startDate, String endDate) throws SQLException{
     Connection connection = connector.openConnection();
     JobDAO jobDAO = new JobDAOImpl();
     Job job = new Job(jobId, name, startDate, endDate);
 
     try {
-      jobDAO.update(job);
+      if (!jobDAO.get(jobId).isEmpty()) {
+        jobDAO.update(job);
+        LOG.info(String.format("Updated: %s", job));
+      }
     } catch (SQLException e) {
+      LOG.info("Unable to update this job, try again or check for errors.");
       throw new SQLException(e.getMessage());
     }
     connector.closeConnection(connection);
-    return job.toString();
+    return job;
+  }
+
+  public Job deleteJob(int jobId) throws SQLException {
+    Connection connection = connector.openConnection();
+    JobDAO jobDAO = new JobDAOImpl();
+    Job job;
+    try {
+      job = jobDAO.get(jobId);
+      jobDAO.delete(job);
+      LOG.info(String.format("Deleted: %s", job));
+    } catch (SQLException e) {
+      LOG.info("Something went wrong, unable to delete this job.");
+      throw new SQLException(e.getMessage());
+    }
+    connector.closeConnection(connection);
+    return job;
   }
 }
