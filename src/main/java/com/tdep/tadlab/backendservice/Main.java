@@ -84,9 +84,7 @@ public class Main {
     Connector connector = new Connector();
     JobService jobService = new JobService(connector);
 
-    System.out.println(jobService.getJob(1));
-    System.out.println(jobService.getAllJobs());
-    System.out.println(jobService.addJob(1000,"Flop", "Blo", "Bl"));
+    System.out.println(jobService.updateJob(1000, "plorp", "yesterday", "today"));
 
     try {
       SpringApplication.run(Main.class, args);

@@ -5,14 +5,10 @@ import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.dto.Job;
 import com.tdep.tadlab.backendservice.service.utils.Connector;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.CompletionStage;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +16,6 @@ import org.slf4j.LoggerFactory;
 public class JobService {
 
   private final Connector connector;
-  private JobDAO jobDAO;
 
   private static final Logger LOG = LoggerFactory.getLogger(JobService.class);
 
@@ -77,6 +72,20 @@ public class JobService {
       jobDAO.insert(job = new Job(jobId, name, startDate, endDate));
     } catch (SQLException e) {
       throw  new SQLException(e.getMessage());
+    }
+    connector.closeConnection(connection);
+    return job.toString();
+  }
+
+  public String updateJob(int jobId, String name, String startDate, String endDate) throws SQLException{
+    Connection connection = connector.openConnection();
+    JobDAO jobDAO = new JobDAOImpl();
+    Job job = new Job(jobId, name, startDate, endDate);
+
+    try {
+      jobDAO.update(job);
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
     }
     connector.closeConnection(connection);
     return job.toString();
