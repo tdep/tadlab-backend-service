@@ -5,9 +5,13 @@ import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.dto.Job;
 import com.tdep.tadlab.backendservice.service.utils.Connector;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -65,10 +69,16 @@ public class JobService {
     return jobsList;
   }
 
-  public String addJob(String jobId, String name, String startDate, String endDate) throws SQLException{
+  public String addJob(int jobId, String name, String startDate, String endDate) throws SQLException{
     Connection connection = connector.openConnection();
     JobDAO jobDAO = new JobDAOImpl();
+    Job job;
+    try {
+      jobDAO.insert(job = new Job(jobId, name, startDate, endDate));
+    } catch (SQLException e) {
+      throw  new SQLException(e.getMessage());
+    }
     connector.closeConnection(connection);
-    return jobId + name + startDate + endDate;
+    return job.toString();
   }
 }

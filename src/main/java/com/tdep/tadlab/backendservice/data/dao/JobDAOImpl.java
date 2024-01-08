@@ -29,9 +29,11 @@ public class JobDAOImpl implements JobDAO{
     if (rs.next()) {
       int jobId = rs.getInt("job_id");
       String name = rs.getString("name");
-      Date start_date = Date.valueOf(rs.getString("start_date"));
-      Date end_date = Date.valueOf(rs.getString("end_date"));
+//      Date start_date = Date.valueOf(rs.getString("start_date"));
+//      Date end_date = Date.valueOf(rs.getString("end_date"));
 
+      String start_date = rs.getString("start_date");
+      String end_date = rs.getString("end_date");
       job = new Job(jobId, name, start_date, end_date);
     }
 
@@ -57,9 +59,11 @@ public class JobDAOImpl implements JobDAO{
     while(rs.next()) {
       int jobId = rs.getInt("job_id");
       String name = rs.getString("name");
-      Date start_date = Date.valueOf(rs.getString("start_date"));
-      Date end_date = Date.valueOf(rs.getString("end_date"));
+//      Date start_date = Date.valueOf(rs.getString("start_date"));
+//      Date end_date = Date.valueOf(rs.getString("end_date"));
 
+      String start_date = rs.getString("start_date");
+      String end_date = rs.getString("end_date");
       Job job = new Job(jobId, name, start_date, end_date);
 
       jobs.add(job);
@@ -80,13 +84,14 @@ public class JobDAOImpl implements JobDAO{
   public int insert(Job job) throws SQLException {
     Connection connection = PgdbConnector.connectDb();
 
-    String sql = "INSERT INTO job (name, start_date, end_date) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO job (job_id, name, start_date, end_date) VALUES (?, ?, ?, ?)";
 
     PreparedStatement ps = connection.prepareStatement(sql);
 
-    ps.setString(1, job.getName());
-    ps.setDate(2, job.getStartDate());
-    ps.setDate(3, job.getEndDate());
+    ps.setInt(1, job.getJobId());
+    ps.setString(2, job.getName());
+    ps.setString(3, job.getStartDate());
+    ps.setString(4, job.getEndDate());
 
     // # of effected records
     int result = ps.executeUpdate();
@@ -106,8 +111,8 @@ public class JobDAOImpl implements JobDAO{
     PreparedStatement ps = connection.prepareStatement(sql);
 
     ps.setString(1, job.getName());
-    ps.setDate(2, job.getStartDate());
-    ps.setDate(3, job.getEndDate());
+    ps.setString(2, job.getStartDate());
+    ps.setString(3, job.getEndDate());
     ps.setInt(4, job.getJobId());
 
     int result = ps.executeUpdate();

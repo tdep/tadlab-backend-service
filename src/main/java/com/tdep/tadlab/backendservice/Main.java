@@ -86,7 +86,7 @@ public class Main {
 
     System.out.println(jobService.getJob(1));
     System.out.println(jobService.getAllJobs());
-    System.out.println(jobService.addJob("Blorp","Blor", "Blo", "Bl"));
+    System.out.println(jobService.addJob(1000,"Flop", "Blo", "Bl"));
 
     try {
       SpringApplication.run(Main.class, args);
