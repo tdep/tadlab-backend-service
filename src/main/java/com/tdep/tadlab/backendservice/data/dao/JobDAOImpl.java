@@ -2,6 +2,7 @@ package com.tdep.tadlab.backendservice.data.dao;
 
 import com.tdep.tadlab.backendservice.data.connections.PgdbConnector;
 import com.tdep.tadlab.backendservice.data.dto.Job;
+import com.tdep.tadlab.backendservice.data.dto.Job.JobBuilder;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -34,7 +35,12 @@ public class JobDAOImpl implements JobDAO{
 
       String start_date = rs.getString("start_date");
       String end_date = rs.getString("end_date");
-      job = new Job(jobId, name, start_date, end_date);
+      job = new JobBuilder(
+          jobId,
+          name,
+          start_date,
+          end_date)
+          .build();
     } else {
       throw new SQLException(String.valueOf(rs.wasNull()));
     }
@@ -66,7 +72,12 @@ public class JobDAOImpl implements JobDAO{
 
       String start_date = rs.getString("start_date");
       String end_date = rs.getString("end_date");
-      Job job = new Job(jobId, name, start_date, end_date);
+      Job job = new JobBuilder(
+          jobId,
+          name,
+          start_date,
+          end_date)
+          .build();
 
       jobs.add(job);
     }

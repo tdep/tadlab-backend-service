@@ -3,6 +3,7 @@ package com.tdep.tadlab.backendservice.service;
 import com.tdep.tadlab.backendservice.data.dao.JobDAO;
 import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.dto.Job;
+import com.tdep.tadlab.backendservice.data.dto.Job.JobBuilder;
 import com.tdep.tadlab.backendservice.service.utils.Connector;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,8 +48,12 @@ public class JobService {
           .map(
               jobs -> {
                 Job job = // Each Job is being built twice - once in JobDAOImpl and once here, this should change
-                    new Job(
-                        jobs.getJobId(), jobs.getName(), jobs.getStartDate(), jobs.getEndDate());
+                    new JobBuilder(
+                        jobs.getJobId(),
+                        jobs.getName(),
+                        jobs.getStartDate(),
+                        jobs.getEndDate()
+                    ).build();
                 if (!job.isEmpty()) {
                   jobsList.add(job);
                 }
@@ -66,9 +71,14 @@ public class JobService {
   public Job addJob(int jobId, String name, String startDate, String endDate) throws SQLException{
     Connection connection = connector.openConnection();
     JobDAO jobDAO = new JobDAOImpl();
-    Job job;
+    Job job = new JobBuilder(
+        jobId,
+        name,
+        startDate,
+        endDate)
+        .build();
     try {
-      jobDAO.insert(job = new Job(jobId, name, startDate, endDate));
+      jobDAO.insert(job);
       LOG.info(String.format("Added: %s", job));
     } catch (SQLException e) {
       LOG.info("Unable to create new job, check that all fields are entered correctly.");
@@ -81,7 +91,7 @@ public class JobService {
   public Job updateJob(int jobId, String name, String startDate, String endDate) throws SQLException{
     Connection connection = connector.openConnection();
     JobDAO jobDAO = new JobDAOImpl();
-    Job job = new Job(jobId, name, startDate, endDate);
+    Job job = new JobBuilder(jobId, name, startDate, endDate).build();
 
     try {
       if (!jobDAO.get(jobId).isEmpty()) {
