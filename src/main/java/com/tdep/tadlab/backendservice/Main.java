@@ -1,14 +1,7 @@
 package com.tdep.tadlab.backendservice;
 
-import com.tdep.tadlab.backendservice.data.connections.PgdbConnector;
-import com.tdep.tadlab.backendservice.data.dao.JobDAO;
-import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
-import com.tdep.tadlab.backendservice.data.ddl.TableBuilder;
-import com.tdep.tadlab.backendservice.data.dto.Job;
+import com.tdep.tadlab.backendservice.data.connections.DBConnectionProvider;
 import com.tdep.tadlab.backendservice.service.JobService;
-import com.tdep.tadlab.backendservice.service.utils.Connector;
-import java.sql.*;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,9 +11,24 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude ={DataSourceAutoConfiguration.class})
 public class Main {
   private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+  private static final String PG_URL = System.getenv("POSTGRES_URL");
+  private static final String PG_USER = System.getenv("POSTGRES_USER");
+  private static final String PG_PWD = System.getenv("POSTGRES_PWD");
+
+
 
 
   public static void main(String[] args) throws Exception{
+
+    DBConnectionProvider connectionProvider = new DBConnectionProvider(
+        PG_URL,
+        PG_USER,
+        PG_PWD
+    );
+
+    JobService jobService = new JobService(connectionProvider);
+    //    jobService.createJob(new JobBuilder(3, "Blern", "Torp", "Lerp").build());
+    System.out.println(jobService.deleteJob(jobService.getJob(3)));
 
 //    TableBuilder.build();
 
@@ -81,12 +89,12 @@ public class Main {
 //    int result = jobDAO.delete(job);
 //
 //    System.out.println(result);
-    Connector connector = new Connector();
-    JobService jobService = new JobService(connector);
-
-    System.out.println(jobService.getJob(1));
-    System.out.println(jobService.getAllJobs());
-    System.out.println(jobService.addJob("Blorp","Blor", "Blo", "Bl"));
+//    Connector connector = new Connector();
+//    JobService jobService = new JobService(connector);
+//
+//    jobService.getJob(7);
+//    jobService.addJob(1000, "plorp", "yesterday", "today");
+//    jobService.deleteJob(1000);
 
     try {
       SpringApplication.run(Main.class, args);
