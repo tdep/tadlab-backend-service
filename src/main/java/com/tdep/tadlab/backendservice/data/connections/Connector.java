@@ -1,6 +1,5 @@
-package com.tdep.tadlab.backendservice.service.utils;
+package com.tdep.tadlab.backendservice.data.connections;
 
-import com.tdep.tadlab.backendservice.data.connections.PgdbConnector;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.slf4j.Logger;

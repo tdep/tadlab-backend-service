@@ -1,124 +1,85 @@
 package com.tdep.tadlab.backendservice.service;
 
-import com.tdep.tadlab.backendservice.data.dao.JobDAO;
+import com.tdep.tadlab.backendservice.data.connections.DBConnectionProvider;
 import com.tdep.tadlab.backendservice.data.dao.JobDAOImpl;
 import com.tdep.tadlab.backendservice.data.dto.Job;
-import com.tdep.tadlab.backendservice.data.dto.Job.JobBuilder;
-import com.tdep.tadlab.backendservice.service.utils.Connector;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JobService {
 
-  private final Connector connector;
+  private final DBConnectionProvider connectionProvider;
 
   private static final Logger LOG = LoggerFactory.getLogger(JobService.class);
 
-  public JobService(
-      final Connector connector) {
-    this.connector = connector;
+  public JobService(DBConnectionProvider connectionProvider) {
+    this.connectionProvider = connectionProvider;
+    createJobsTableIfNotExists();
   }
 
-  public Job getJob(int id) throws SQLException {
-    Connection connection = connector.openConnection();
-    JobDAO jobDAO = new JobDAOImpl();
+  JobDAOImpl jobDAO;
+
+  public void createJob(Job job) {
+    try (Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
+      jobDAO.insert(job);
+      LOG.info("New Job created!");
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public Job getJob(int id) {
     Job job;
-    try {
+    try (Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
       job = jobDAO.get(id);
     } catch (SQLException e) {
-      LOG.info("There are no jobs with that id.");
-      throw new SQLException(e.getMessage());
+      LOG.info("Unable to fetch job with that id.");
+      throw new RuntimeException(e);
     }
-    connector.closeConnection(connection);
     return job;
   }
 
-  public List<Job> getAllJobs() throws SQLException {
-    // TODO: Add pagination and next token somehow
-    Connection connection = connector.openConnection(); // this is causing the connection to be created twice I think
-    JobDAO jobDAO = new JobDAOImpl();
-    List<Job> jobsList = new ArrayList<>();
-    try {
-      jobDAO.getAll().stream()
-          .map(
-              jobs -> {
-                Job job = // Each Job is being built twice - once in JobDAOImpl and once here, this should change
-                    new JobBuilder(
-                        jobs.getJobId(),
-                        jobs.getName(),
-                        jobs.getStartDate(),
-                        jobs.getEndDate()
-                    ).build();
-                if (!job.isEmpty()) {
-                  jobsList.add(job);
-                }
-                return job;
-              })
-          .collect(Collectors.toList());
+  public List<Job> getAllJobs() {
+    try (Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
+      return jobDAO.getAll();
     } catch (SQLException e) {
       LOG.info("Something went wrong, unable to fetch jobs.");
-      throw new SQLException(e.getMessage());
+      throw new RuntimeException(e);
     }
-    connector.closeConnection(connection);
-    return jobsList;
   }
 
-  public Job addJob(int jobId, String name, String startDate, String endDate) throws SQLException{
-    Connection connection = connector.openConnection();
-    JobDAO jobDAO = new JobDAOImpl();
-    Job job = new JobBuilder(
-        jobId,
-        name,
-        startDate,
-        endDate)
-        .build();
-    try {
-      jobDAO.insert(job);
-      LOG.info(String.format("Added: %s", job));
+  public int updateJob(Job job) {
+    try(Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
+      return jobDAO.update(job);
     } catch (SQLException e) {
-      LOG.info("Unable to create new job, check that all fields are entered correctly.");
-      throw  new SQLException(e.getMessage());
+      LOG.info("Unable to update that job.");
+      throw new RuntimeException(e);
     }
-    connector.closeConnection(connection);
-    return job;
   }
 
-  public Job updateJob(int jobId, String name, String startDate, String endDate) throws SQLException{
-    Connection connection = connector.openConnection();
-    JobDAO jobDAO = new JobDAOImpl();
-    Job job = new JobBuilder(jobId, name, startDate, endDate).build();
-
-    try {
-      if (!jobDAO.get(jobId).isEmpty()) {
-        jobDAO.update(job);
-        LOG.info(String.format("Updated: %s", job));
-      }
+  public int deleteJob(Job job) {
+    try(Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
+      return jobDAO.delete(job);
     } catch (SQLException e) {
-      LOG.info("Unable to update this job, try again or check for errors.");
-      throw new SQLException(e.getMessage());
+      LOG.info("Cannot delete this job.");
+      throw new RuntimeException(e);
     }
-    connector.closeConnection(connection);
-    return job;
   }
 
-  public Job deleteJob(int jobId) throws SQLException {
-    Connection connection = connector.openConnection();
-    JobDAO jobDAO = new JobDAOImpl();
-    Job job;
-    try {
-      job = jobDAO.get(jobId);
-      jobDAO.delete(job);
-      LOG.info(String.format("Deleted: %s", job));
+  private void createJobsTableIfNotExists() {
+    try (Connection connection = this.connectionProvider.getConnection()) {
+      jobDAO = new JobDAOImpl(connection);
+      jobDAO.createTable();
     } catch (SQLException e) {
-      LOG.info("Something went wrong, unable to delete this job.");
-      throw new SQLException(e.getMessage());
+      throw new RuntimeException(e);
     }
-    connector.closeConnection(connection);
-    return job;
   }
 }

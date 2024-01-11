@@ -1,103 +1,25 @@
 package com.tdep.tadlab.backendservice.data.dao;
 
-import com.tdep.tadlab.backendservice.data.connections.PgdbConnector;
 import com.tdep.tadlab.backendservice.data.dto.Job;
 import com.tdep.tadlab.backendservice.data.dto.Job.JobBuilder;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JobDAOImpl implements JobDAO{
 
-  @Override
-  public Job get(int job_id) throws SQLException {
-    Connection connection = PgdbConnector.connectDb();
-    Job job = null;
+  private final Connection connection;
 
-    String sql = "SELECT job_id, name, start_date, end_date FROM job WHERE job_id = ?";
-
-    PreparedStatement ps = connection.prepareStatement(sql);
-
-    ps.setInt(1, job_id);
-
-    ResultSet rs = ps.executeQuery();
-
-    if (rs.next()) {
-      int jobId = rs.getInt("job_id");
-      String name = rs.getString("name");
-//      Date start_date = Date.valueOf(rs.getString("start_date"));
-//      Date end_date = Date.valueOf(rs.getString("end_date"));
-
-      String start_date = rs.getString("start_date");
-      String end_date = rs.getString("end_date");
-      job = new JobBuilder(
-          jobId,
-          name,
-          start_date,
-          end_date)
-          .build();
-    } else {
-      throw new SQLException(String.valueOf(rs.wasNull()));
-    }
-
-    PgdbConnector.closeResultSet(rs);
-    PgdbConnector.closePreparedStatement(ps);
-    PgdbConnector.closeConnection(connection);
-
-    return job;
-  }
-
-  @Override
-  public List<Job> getAll() throws SQLException {
-// TODO: Add pagination and nextToken somehow
-    Connection connection = PgdbConnector.connectDb();
-    String sql = "SELECT job_id, name, start_date, end_date FROM job";
-
-    List<Job> jobs = new ArrayList<>();
-
-    Statement statement = connection.createStatement();
-
-    ResultSet rs = statement.executeQuery(sql);
-
-    while(rs.next()) {
-      int jobId = rs.getInt("job_id");
-      String name = rs.getString("name");
-//      Date start_date = Date.valueOf(rs.getString("start_date"));
-//      Date end_date = Date.valueOf(rs.getString("end_date"));
-
-      String start_date = rs.getString("start_date");
-      String end_date = rs.getString("end_date");
-      Job job = new JobBuilder(
-          jobId,
-          name,
-          start_date,
-          end_date)
-          .build();
-
-      jobs.add(job);
-    }
-    PgdbConnector.closeResultSet(rs);
-    PgdbConnector.closeStatement(statement);
-    PgdbConnector.closeConnection(connection);
-
-    return jobs;
-  }
-
-  @Override
-  public int save(Job job) throws SQLException {
-    return 0;
+  public JobDAOImpl(Connection connection) {
+    this.connection = connection;
   }
 
   @Override
   public int insert(Job job) throws SQLException {
-    Connection connection = PgdbConnector.connectDb();
-
-    String sql = "INSERT INTO job (job_id, name, start_date, end_date) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO jobs (id, name, start_date, end_date) VALUES (?, ?, ?, ?)";
 
     PreparedStatement ps = connection.prepareStatement(sql);
 
@@ -107,20 +29,50 @@ public class JobDAOImpl implements JobDAO{
     ps.setString(4, job.getEndDate());
 
     // # of effected records
-    int result = ps.executeUpdate();
+    return ps.executeUpdate();
+  }
 
-    PgdbConnector.closePreparedStatement(ps);
-    PgdbConnector.closeConnection(connection);
+  @Override
+  public Job get(int id) throws SQLException {
+    Job job;
+    String sql = "SELECT id, name, start_date, end_date FROM jobs WHERE id = ?";
+    PreparedStatement ps = connection.prepareStatement(sql);
+    ps.setInt(1, id);
+    ResultSet rs = ps.executeQuery();
 
-    return result;
+    if (rs.next()) {
+      int jobId = rs.getInt("id");
+      String name = rs.getString("name");
+      String start_date = rs.getString("start_date");
+      String end_date = rs.getString("end_date");
+      job = new JobBuilder(jobId, name, start_date, end_date).build();
+    } else {
+      throw new SQLException(String.valueOf(rs.wasNull()));
+    }
+    return job;
+  }
+
+  @Override
+  public List<Job> getAll() throws SQLException {
+// TODO: Add pagination and nextToken somehow
+    List<Job> jobs = new ArrayList<>();
+    String sql = "SELECT id, name, start_date, end_date FROM jobs";
+    PreparedStatement ps = connection.prepareStatement(sql);
+    ResultSet rs = ps.executeQuery();
+
+    while(rs.next()) {
+      int id = rs.getInt("id");
+      String name = rs.getString("name");
+      String start_date = rs.getString("start_date");
+      String end_date = rs.getString("end_date");
+      jobs.add(new JobBuilder(id, name, start_date, end_date).build());
+    }
+    return jobs;
   }
 
   @Override
   public int update(Job job) throws SQLException {
-    Connection connection = PgdbConnector.connectDb();
-
-    String sql = "UPDATE job set name = ?, start_date = ?, end_date = ? WHERE job_id = ?";
-
+    String sql = "UPDATE jobs set name = ?, start_date = ?, end_date = ? WHERE id = ?";
     PreparedStatement ps = connection.prepareStatement(sql);
 
     ps.setString(1, job.getName());
@@ -128,29 +80,37 @@ public class JobDAOImpl implements JobDAO{
     ps.setString(3, job.getEndDate());
     ps.setInt(4, job.getJobId());
 
-    int result = ps.executeUpdate();
-
-    PgdbConnector.closePreparedStatement(ps);
-    PgdbConnector.closeConnection(connection);
-
-    return result;
+    return ps.executeUpdate();
   }
 
   @Override
   public int delete(Job job) throws SQLException {
-    Connection connection = PgdbConnector.connectDb();
-
-    String sql = "DELETE FROM job WHERE job_id = ?";
-
+    String sql = "DELETE FROM jobs WHERE id = ?";
     PreparedStatement ps = connection.prepareStatement(sql);
 
     ps.setInt(1, job.getJobId());
 
-    int result = ps.executeUpdate();
+    return ps.executeUpdate();
+  }
 
-    PgdbConnector.closePreparedStatement(ps);
-    PgdbConnector.closeConnection(connection);
+  @Override
+  public int save(Job job) throws SQLException {
+    return 0;
+  }
 
-    return result;
+  public void createTable() throws SQLException {
+    String sql =
+        """
+      CREATE TABLE IF NOT EXISTS jobs (
+      id BIGINT NOT NULL,
+      name VARCHAR NOT NULL,
+      start_date VARCHAR NOT NULL,
+      end_date VARCHAR NOT NULL,
+      PRIMARY KEY (id))
+    """;
+
+    PreparedStatement ps = connection.prepareStatement(sql);
+
+    ps.execute();
   }
 }
