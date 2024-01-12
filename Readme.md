@@ -6,3 +6,5 @@ like synthesizers and shiny things :D
 Currently, the service is written in Java using SpringBoot with a database in PostgreSQL.
 I'm presently following the model of BFF, so this service actually serves the companion 
 API for the portfolio site which in turn serves the frontend directly.
+
+As time goes on, I will continue to add to this service.
