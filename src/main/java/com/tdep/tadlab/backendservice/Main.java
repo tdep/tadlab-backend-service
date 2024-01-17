@@ -1,7 +1,7 @@
 package com.tdep.tadlab.backendservice;
 
-import com.tdep.tadlab.backendservice.data.connections.DBConnectionProvider;
-import com.tdep.tadlab.backendservice.service.JobService;
+//import com.tdep.tadlab.backendservice.data.connections.DBConnectionProvider;
+//import com.tdep.tadlab.backendservice.services.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,24 +11,24 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude ={DataSourceAutoConfiguration.class})
 public class Main {
   private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-  private static final String PG_URL = System.getenv("POSTGRES_URL");
-  private static final String PG_USER = System.getenv("POSTGRES_USER");
-  private static final String PG_PWD = System.getenv("POSTGRES_PWD");
+//  private static final String PG_URL = System.getenv("POSTGRES_URL");
+//  private static final String PG_USER = System.getenv("POSTGRES_USER");
+//  private static final String PG_PWD = System.getenv("POSTGRES_PWD");
 
 
 
 
   public static void main(String[] args) throws Exception{
 
-    DBConnectionProvider connectionProvider = new DBConnectionProvider(
-        PG_URL,
-        PG_USER,
-        PG_PWD
-    );
-
-    JobService jobService = new JobService(connectionProvider);
+//    DBConnectionProvider connectionProvider = new DBConnectionProvider(
+//        PG_URL,
+//        PG_USER,
+//        PG_PWD
+//    );
+//    SpringApplication.run(Main.class, args);
+//    JobService jobService = new JobService(connectionProvider);
     //    jobService.createJob(new JobBuilder(3, "Blern", "Torp", "Lerp").build());
-    System.out.println(jobService.deleteJob(jobService.getJob(3)));
+//    System.out.println(jobService.deleteJob(jobService.getJob(3)));
 
 //    TableBuilder.build();
 

@@ -32,4 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/java/com/tdep/tadlab/backendservice/controllers/backup
+/src/main/java/com/tdep/tadlab/backendservice/data/backup
