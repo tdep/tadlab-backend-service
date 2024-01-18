@@ -2,16 +2,16 @@ package com.tdep.tadlab.backendservice.model;
 
 
 public class Job {
-  private long id;
+  private int id;
   private String name;
   private String startDate;
   private String endDate;
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -39,7 +39,7 @@ public class Job {
     this.endDate = endDate;
   }
 
-  public Job(long id, String name, String startDate, String endDate) {
+  public Job(int id, String name, String startDate, String endDate) {
     this.id = id;
     this.name = name;
     this.startDate = startDate;

@@ -10,10 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication()
 public class Main {
   private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-//  private static final String PG_URL = System.getenv("POSTGRES_URL");
-//  private static final String PG_USER = System.getenv("POSTGRES_USER");
-//  private static final String PG_PWD = System.getenv("POSTGRES_PWD");
-
   public static void main(String[] args) throws Exception{
 
     try {

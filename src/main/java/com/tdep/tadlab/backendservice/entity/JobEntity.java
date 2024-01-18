@@ -12,12 +12,12 @@ public class JobEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private int id;
   private String name;
   private String startDate;
   private String endDate;
 
-  public JobEntity(long id, String name, String startDate, String endDate) {
+  public JobEntity(int id, String name, String startDate, String endDate) {
     this.id = id;
     this.name = name;
     this.startDate = startDate;
@@ -27,11 +27,11 @@ public class JobEntity {
   public JobEntity() {
   }
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
 

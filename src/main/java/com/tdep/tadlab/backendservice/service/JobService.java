@@ -8,9 +8,9 @@ public interface JobService {
 
   List<Job> getAllJobs();
 
-  Job getJobById(Long id);
+  Job getJobById(int id);
 
-  boolean deleteJob(Long id);
+  boolean deleteJob(int id);
 
-  Job updateJob(Long id, Job job);
+  Job updateJob(Job job);
 }

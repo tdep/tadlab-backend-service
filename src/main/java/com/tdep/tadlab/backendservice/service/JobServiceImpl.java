@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JobServiceImpl implements JobService {
-  private JobRepository jobRepository;
+  private final JobRepository jobRepository;
 
   public JobServiceImpl(JobRepository jobRepository) {
     this.jobRepository = jobRepository;
@@ -28,7 +28,7 @@ public class JobServiceImpl implements JobService {
   public List<Job> getAllJobs() {
     List<JobEntity> jobEntities = jobRepository.findAll();
 
-    List<Job> jobs = jobEntities
+    return jobEntities
         .stream()
         .map(jobEntity -> new Job(
             jobEntity.getId(),
@@ -37,32 +37,42 @@ public class JobServiceImpl implements JobService {
             jobEntity.getEndDate()
         ))
         .collect(Collectors.toList());
-    return jobs;
   }
 
   @Override
-  public Job getJobById(Long id) {
-    JobEntity jobEntity = jobRepository.findById(id).get();
-    Job job = new Job();
-    BeanUtils.copyProperties(jobEntity, job);
-    return job;
+  public Job getJobById(int id) {
+    if (jobRepository.findById(id).isEmpty()) {
+      throw new RuntimeException("Unable to find Job with that ID");
+    } else {
+      JobEntity jobEntity = jobRepository.findById(id).get();
+      Job job = new Job();
+      BeanUtils.copyProperties(jobEntity, job);
+      return job;
+    }
   }
 
   @Override
-  public boolean deleteJob(Long id) {
-    JobEntity job = jobRepository.findById(id).get();
-    jobRepository.delete(job);
-    return true;
+  public boolean deleteJob(int id) {
+    if (jobRepository.findById(id).isPresent()) {
+      JobEntity job = jobRepository.findById(id).get();
+      jobRepository.delete(job);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
-  public Job updateJob(Long id, Job job) {
-    JobEntity jobEntity = jobRepository.findById(id).get();
-    jobEntity.setName(job.getName());
-    jobEntity.setStartDate(job.getStartDate());
-    jobEntity.setEndDate(job.getEndDate());
+  public Job updateJob(Job job) {
+    if (jobRepository.findById(job.getId()).isPresent()) {
+      JobEntity jobEntity = jobRepository.findById(job.getId()).get();
+      jobEntity.setName(job.getName());
+      jobEntity.setStartDate(job.getStartDate());
+      jobEntity.setEndDate(job.getEndDate());
 
     jobRepository.save(jobEntity);
+    }
     return job;
+
   }
 }

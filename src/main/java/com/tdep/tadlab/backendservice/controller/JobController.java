@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -37,14 +38,14 @@ public class JobController {
   }
 
   @GetMapping("/jobs/{id}")
-  public ResponseEntity<Job> getJobById(@PathVariable("id") Long id) {
+  public ResponseEntity<Job> getJobById(@PathVariable("id") int id) {
     Job job = null;
     job = jobService.getJobById(id);
     return ResponseEntity.ok(job);
   }
 
   @DeleteMapping("/jobs/{id}")
-  public ResponseEntity<Map<String,Boolean>> deleteJob(@PathVariable("id") Long id) {
+  public ResponseEntity<Map<String,Boolean>> deleteJob(@PathVariable("id") int id) {
     boolean deleted = false;
     deleted = jobService.deleteJob(id);
     Map<String, Boolean> response = new HashMap<>();
@@ -52,9 +53,15 @@ public class JobController {
     return ResponseEntity.ok(response);
   }
 
-  @PutMapping("/users/{id}")
-  public ResponseEntity<Job> updateJob(@PathVariable("id") Long id, @RequestBody Job job) {
-    job = jobService.updateJob(id, job);
+  @PutMapping("/jobs/{id}")
+  public ResponseEntity<Job> updateJob(@PathVariable("id") int id, @RequestBody Job job) {
+    jobService.getJobById(id);
+    jobService.updateJob(job);
     return ResponseEntity.ok(job);
+  }
+
+  @RequestMapping("/")
+  public @ResponseBody String greeting() {
+    return "Hello, World";
   }
 }
