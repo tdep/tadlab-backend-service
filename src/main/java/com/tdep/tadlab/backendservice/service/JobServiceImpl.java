@@ -63,7 +63,7 @@ public class JobServiceImpl implements JobService {
   }
 
   @Override
-  public Job updateJob(Job job) {
+  public void updateJob(Job job) {
     if (jobRepository.findById(job.getId()).isPresent()) {
       JobEntity jobEntity = jobRepository.findById(job.getId()).get();
       jobEntity.setName(job.getName());
@@ -72,7 +72,6 @@ public class JobServiceImpl implements JobService {
 
     jobRepository.save(jobEntity);
     }
-    return job;
 
   }
 }
