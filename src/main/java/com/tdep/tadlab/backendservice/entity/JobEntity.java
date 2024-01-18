@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class JobEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String name;
   private String startDate;

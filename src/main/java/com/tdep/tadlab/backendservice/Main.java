@@ -20,3 +20,11 @@ public class Main {
     }
   }
 }
+
+
+//TODO: How to prevent creating two objects with the same name - in the DB or controller?
+//TODO: Is there a better way to create a data layer? - Maybe without using Spring @Annotations
+//TODO: Implementing Authentication to prevent outside calls without token
+//TODO: Best way to handle ID generation
+//TODO: Test endpoints using deployed service
+//TODO: Create interface to handle editing and creating database entries
