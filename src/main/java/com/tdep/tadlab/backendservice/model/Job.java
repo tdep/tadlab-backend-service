@@ -1,31 +1,18 @@
-package com.tdep.tadlab.backendservice.models;
+package com.tdep.tadlab.backendservice.model;
 
-
-import java.sql.Date;
 
 public class Job {
-  private int jobId;
+  private long id;
   private String name;
   private String startDate;
   private String endDate;
 
-  public Job() {
-
+  public long getId() {
+    return id;
   }
 
-  public Job(int jobId, String name, String startDate, String endDate) {
-    this.jobId = jobId;
-    this.name = name;
-    this.startDate = startDate;
-    this.endDate = endDate;
-  }
-
-  public int getJobId() {
-    return jobId;
-  }
-
-  public void setJobId(int jobId) {
-    this.jobId = jobId;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -50,5 +37,16 @@ public class Job {
 
   public void setEndDate(String endDate) {
     this.endDate = endDate;
+  }
+
+  public Job(long id, String name, String startDate, String endDate) {
+    this.id = id;
+    this.name = name;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  public Job() {
+
   }
 }
